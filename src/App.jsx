@@ -7,7 +7,19 @@ class App extends Component {
     super(props)
     this.state = {
       loading: true,
-      userName: "Chris"
+      currentUser: { name: "Bob" }, // optional. if currentUser is not defined, it means the user is Anonymous
+      messages: [
+        {
+          id: "4f46b23",
+          username: "Bob",
+          content: "Has anyone seen my marbles?",
+        },
+        {
+          id: "h73b9f8",
+          username: "Anonymous",
+          content: "No, I think you lost them. You lost your marbles Bob. You lost them for good."
+        }
+      ]
     };
   }
 
@@ -15,7 +27,7 @@ class App extends Component {
     setTimeout(() => {
       this.setState({loading: false});
     }, 3000)
-  }
+   }
 
   render() {
     if (this.state.loading) {
@@ -23,8 +35,8 @@ class App extends Component {
     } else {
     return (
       <div>
-        <MessageList />
-        <ChatBar user={this.state.userName} />
+        <MessageList messages={this.state.messages} />
+        <ChatBar user={this.state.currentUser.name} />
       </div>
     );
     }
