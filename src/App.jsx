@@ -5,7 +5,10 @@ import MessageList from './MessageList.jsx';
 class App extends Component {
   constructor(props) {
     super(props)
-    this.state = {loading: true};
+    this.state = {
+      loading: true,
+      userName: "Chris"
+    };
   }
 
   componentDidMount() {
@@ -21,7 +24,7 @@ class App extends Component {
     return (
       <div>
         <MessageList />
-        <ChatBar />
+        <ChatBar user={this.state.userName} />
       </div>
     );
     }
