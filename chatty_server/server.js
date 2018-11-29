@@ -15,6 +15,12 @@ const server = express()
 // Create the WebStockets server
 const wss = new SocketServer({ server });
 
+wss.broadcast = function broadcast(data) {
+  wss.clients.forEach(function each(ws) {
+    ws.send(JSON.stringify(data));
+  });
+};
+
 const clients = []
 
 // Set up a callback that will run when a client connects to the server
@@ -25,23 +31,63 @@ wss.on('connection', (ws) => {
   console.log('Client connected');
 
   clients.push(ws)
+  // const mySet = wss.clients
+  // console.log(mySet.size)
+  const numOfUsers = {type: "numOfUsers", numOfUsers: wss.clients.size}
+  wss.broadcast(numOfUsers)
+  console.log(numOfUsers)
 
-  ws.on('message', function incoming(newMessage) {
-    const newMessageString = JSON.parse(newMessage)
-    newMessageString.id = uuidv1()
-    console.log(JSON.stringify(newMessage));
+  ws.on('message', function incoming(message) {
 
-    clients.forEach(client => {
-      if (client.readyState === WebSocket.OPEN && client !== ws) {
-        client.send(newMessage)
-      }
+
+    const data = JSON.parse(message);
+    console.log(data)
+    switch (data.type) {
+      case "postMessage":
+        // handle incoming message
+        //const newMessageString = JSON.parse(message)
+        data.id = uuidv1()
+        data.type = "incomingMessage"
+        console.log(JSON.stringify(message));
+        break;
+      case "postNotification":
+        // handle incoming notification
+        //const newUserString = JSON.parse(message);
+        data.id = uuidv1();
+        data.type = "incomingNotification";
+        data.content = `${data.nameA} has changed their name to ${data.nameB}`
+        console.log(JSON.stringify(data.content))
+        break;
+      default:
+        // show an error in the console if the message type is unknown
+        throw new Error("Unknown event type " + message.type);
+    }
+
+      wss.broadcast(data)
+
+
+
+    // clients.forEach(client => {
+    //   if (client.readyState === WebSocket.OPEN && client !== ws) {
+    //     client.send(message)
+    //   }
 
 
 
 
   })
   //console.log()
-  ws.send(JSON.stringify(newMessageString));
+  //ws.send(JSON.stringify(newMessageString));
+  ws.on('close', () => {
+      console.log('Client disconnected')
+      const numOfUsers = {
+        type: "numOfUsers",
+        numOfUsers: wss.clients.size
+      }
+      wss.broadcast(numOfUsers)
+      console.log(numOfUsers)
+  })
+
 })
 
 
@@ -49,5 +95,4 @@ wss.on('connection', (ws) => {
   // newMessageString.JSON.stringify(newMessage)
 
   // Set up a callback for when a client closes the socket.  This usually means they closed their browser.
-  ws.on('close', () => console.log('Client disconnected'))
-})
+
