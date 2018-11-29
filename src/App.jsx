@@ -12,7 +12,8 @@ class App extends Component {
       //loading: true,
       currentUser: { name: "Anonymous" }, // optional. if currentUser is not defined, it means the user is Anonymous
       messages: [], // messages coming from the server will be stored here as they arrive
-      users: 0
+      users: 0,
+      colors: []
     };
     this.socket = new WebSocket("ws://localhost:3001");
 

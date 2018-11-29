@@ -31,21 +31,22 @@ wss.on('connection', (ws) => {
   console.log('Client connected');
 
   clients.push(ws)
-  // const mySet = wss.clients
-  // console.log(mySet.size)
   const numOfUsers = {type: "numOfUsers", numOfUsers: wss.clients.size}
   wss.broadcast(numOfUsers)
-  console.log(numOfUsers)
+
+  // Array with some colors
+  var colors = ['red', 'green', 'blue', 'purple'];
+
+
+  console.log(colors)
 
   ws.on('message', function incoming(message) {
-
 
     const data = JSON.parse(message);
     console.log(data)
     switch (data.type) {
       case "postMessage":
         // handle incoming message
-        //const newMessageString = JSON.parse(message)
         data.id = uuidv1()
         data.type = "incomingMessage"
         console.log(JSON.stringify(message));
@@ -84,7 +85,7 @@ wss.on('connection', (ws) => {
         type: "numOfUsers",
         numOfUsers: wss.clients.size
       }
-      wss.broadcast(numOfUsers)
+      wss.broadcast(numOfUsers  )
       console.log(numOfUsers)
   })
 
