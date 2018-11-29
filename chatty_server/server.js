@@ -31,29 +31,37 @@ wss.on('connection', (ws) => {
   console.log('Client connected');
 
   clients.push(ws)
-  const numOfUsers = {type: "numOfUsers", numOfUsers: wss.clients.size}
+  const numOfUsers = {
+    type: "numOfUsers",
+    numOfUsers: wss.clients.size
+  }
   wss.broadcast(numOfUsers)
 
-  // Array with some colors
-  var colors = ['red', 'green', 'blue', 'purple'];
+  const colors = ['red', 'green', 'blue', 'purple'];
+  const randomColor = colors[Math.floor((Math.random() * 4))]
+
+  const userColor = {
+    type: "userColor",
+    userColor: randomColor
+  }
+  ws.send(JSON.stringify(userColor))
 
 
-  console.log(colors)
+
+
+
 
   ws.on('message', function incoming(message) {
 
     const data = JSON.parse(message);
-    console.log(data)
     switch (data.type) {
       case "postMessage":
         // handle incoming message
         data.id = uuidv1()
         data.type = "incomingMessage"
-        console.log(JSON.stringify(message));
         break;
       case "postNotification":
         // handle incoming notification
-        //const newUserString = JSON.parse(message);
         data.id = uuidv1();
         data.type = "incomingNotification";
         data.content = `${data.nameA} has changed their name to ${data.nameB}`
@@ -65,35 +73,19 @@ wss.on('connection', (ws) => {
     }
 
       wss.broadcast(data)
-
-
-
-    // clients.forEach(client => {
-    //   if (client.readyState === WebSocket.OPEN && client !== ws) {
-    //     client.send(message)
-    //   }
-
-
-
-
   })
-  //console.log()
-  //ws.send(JSON.stringify(newMessageString));
+
   ws.on('close', () => {
       console.log('Client disconnected')
       const numOfUsers = {
         type: "numOfUsers",
         numOfUsers: wss.clients.size
       }
-      wss.broadcast(numOfUsers  )
-      console.log(numOfUsers)
+      wss.broadcast(numOfUsers)
   })
 
 })
 
-
-
-  // newMessageString.JSON.stringify(newMessage)
 
   // Set up a callback for when a client closes the socket.  This usually means they closed their browser.
 

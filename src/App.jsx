@@ -13,11 +13,9 @@ class App extends Component {
       currentUser: { name: "Anonymous" }, // optional. if currentUser is not defined, it means the user is Anonymous
       messages: [], // messages coming from the server will be stored here as they arrive
       users: 0,
-      colors: []
+      color: "black"
     };
     this.socket = new WebSocket("ws://localhost:3001");
-
-    //this.addNewMessageItem = this.addNewMessageItem.bind(this);
   }
 
 
@@ -29,15 +27,19 @@ class App extends Component {
     this.socket.onmessage = (event) => {
       console.log(event.data)
       const data = JSON.parse(event.data)
-      if ( data.type === 'numOfUsers') {
+      if (data.type === 'numOfUsers') {
         this.setState({users: data.numOfUsers})
-        console.log("Hello there::::", this.state.users)
-      } else {
-      const oldMessageItems = this.state.messages;
-      const newMessageItems = data
-      const actualMessage = [...oldMessageItems, newMessageItems]
-      this.setState({messages: actualMessage})
       }
+
+      if (data.type === 'userColor') {
+        this.setState({color: data.userColor})
+        console.log(data.type)
+      }
+
+      const oldMessageItems = this.state.messages;
+      const newMessageItems = data;
+      const actualMessage = [...oldMessageItems, newMessageItems];
+      this.setState({messages: actualMessage})
     }
   }
 
@@ -45,7 +47,8 @@ class App extends Component {
     const newMessage = {
       type: "postMessage",
       username: this.state.currentUser.name,
-      content
+      content,
+      color: this.state.color
     };
     this.socket.send(JSON.stringify(newMessage));
   }
@@ -67,7 +70,7 @@ class App extends Component {
       return (
       <div>
         <NavBar users={this.state.users}/>
-        <MessageList messages={this.state.messages} />
+        <MessageList messages={this.state.messages} color={this.state.color} />
         <ChatBar user={this.state.currentUser.name} addNewMessageItem={this.addNewMessageItem} addNewUserItem={this.addNewUserItem} />
       </div>
       );
