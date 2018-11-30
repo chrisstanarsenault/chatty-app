@@ -29,7 +29,7 @@ Users can choose a username (and modify anytime, which will alert all users) and
 * webpack : 2.2.1
 * webpack-dev-server : 2.3.0
 
-##Getting Started
+## Getting Started
 - Install all dependencies
 - Make your way to the chatty_server directory and run: node server.js
 - Once thats running, open a second console, navigate to the root directory and run: npm start.
@@ -60,8 +60,8 @@ npm run lint
 !["Multi-user Screens 1"](https://github.com/chrisstanarsenault/chatty-app/blob/master/docs/Chatty-App-SS-2.png?raw=true)
 
 ### Multi-user Screens 2
-!["Multi-user Screens 2"](https://github.com/chrisstanarsenault/hookeai-poke/blob/master/docs/hookeai-poke-ss-main1.png?raw=true)
+!["Multi-user Screens 2"](https://github.com/chrisstanarsenault/chatty-app/blob/master/docs/Chatty-App-SS-3.png?raw=true)
 
 ### Updated User Counter
-!["Updated User Counter"](https://github.com/chrisstanarsenault/hookeai-poke/blob/master/docs/hookeai-poke-ss-main1.png?raw=true)
+!["Updated User Counter"](https://github.com/chrisstanarsenault/chatty-app/blob/master/docs/User-Counter-SS.png?raw=true)
 
