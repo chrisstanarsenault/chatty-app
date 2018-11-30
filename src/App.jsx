@@ -9,7 +9,6 @@ class App extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      //loading: true,
       currentUser: { name: "Anonymous" }, // optional. if currentUser is not defined, it means the user is Anonymous
       messages: [], // messages coming from the server will be stored here as they arrive
       users: 0,
@@ -27,10 +26,11 @@ class App extends Component {
     this.socket.onmessage = (event) => {
       console.log(event.data)
       const data = JSON.parse(event.data)
+      // updates user state when server notifies a new user has logged in, and updates counter
       if (data.type === 'numOfUsers') {
         this.setState({users: data.numOfUsers})
       }
-
+      // updates color state for new user when they log in
       if (data.type === 'userColor') {
         this.setState({color: data.userColor})
         console.log(data.type)
@@ -52,7 +52,8 @@ class App extends Component {
     };
     this.socket.send(JSON.stringify(newMessage));
   }
-
+  // function for modifying the username, and notifying everyone who is logged in.
+  // nameA is current username, and nameB is the new username after state change
   addNewUserItem = (username) => {
     const newUser = {
       type: "postNotification",
@@ -64,9 +65,6 @@ class App extends Component {
   }
 
   render() {
-    // if (this.state.loading) {
-    //   return <h1>Loading messages....</h1>
-    //   } else {
       return (
       <div>
         <NavBar users={this.state.users}/>
@@ -76,5 +74,4 @@ class App extends Component {
       );
     }
   }
-//}
 export default App;

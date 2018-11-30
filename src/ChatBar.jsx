@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 
 class ChatBar extends Component {
+  // Submits message in message field once Enter key is pressed
   handleKeyPressForMessage = event => {
     if (event.key === "Enter") {
       const contentInput = event.target.value;
@@ -9,6 +10,7 @@ class ChatBar extends Component {
     }
   };
 
+  // Submits new username once Enter key is pressed
   handleKeyPressForUser = event => {
     if (event.key === "Enter") {
       const userInput = event.target.value;

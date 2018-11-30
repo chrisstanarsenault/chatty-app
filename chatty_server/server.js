@@ -1,7 +1,6 @@
 const express = require('express')
 const SocketServer = require('ws').Server;
 const uuidv1 = require('uuid/v1');
-const WebSocket = require('ws')
 
 // Set the port to 3001
 const PORT = 3001;
@@ -21,8 +20,6 @@ wss.broadcast = function broadcast(data) {
   });
 };
 
-const clients = []
-
 // Set up a callback that will run when a client connects to the server
 // When a client connects they are assigned a socket, represented by
 // the ws parameter in the callback.
@@ -30,7 +27,8 @@ const clients = []
 wss.on('connection', (ws) => {
   console.log('Client connected');
 
-  clients.push(ws)
+  // Keeps tracks of amount of users logging into site,
+  // and sends this information to client to update user count state and add 1 to 'Users Online' counter
   const numOfUsers = {
     type: "numOfUsers",
     numOfUsers: wss.clients.size
@@ -40,6 +38,7 @@ wss.on('connection', (ws) => {
   const colors = ['red', 'green', 'blue', 'purple'];
   const randomColor = colors[Math.floor((Math.random() * 4))]
 
+  //  Assigns each new user a randomly generated color from color array above
   const userColor = {
     type: "userColor",
     userColor: randomColor
@@ -47,13 +46,10 @@ wss.on('connection', (ws) => {
   ws.send(JSON.stringify(userColor))
 
 
-
-
-
-
   ws.on('message', function incoming(message) {
 
     const data = JSON.parse(message);
+
     switch (data.type) {
       case "postMessage":
         // handle incoming message
@@ -74,7 +70,7 @@ wss.on('connection', (ws) => {
 
       wss.broadcast(data)
   })
-
+  // Logs when a user logs off site, to subtract from 'users online' message in navbar
   ws.on('close', () => {
       console.log('Client disconnected')
       const numOfUsers = {
