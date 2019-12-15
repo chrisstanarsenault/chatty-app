@@ -3,7 +3,7 @@ const SocketServer = require('ws').Server;
 const uuidv1 = require('uuid/v1');
 
 // Set the port to 3001
-const PORT = 3001;
+const PORT = process.env.PORT || 3001;
 
 // Create a new express server
 const server = express()
@@ -30,7 +30,7 @@ wss.on('connection', (ws) => {
   // Keeps tracks of amount of users logging into site,
   // and sends this information to client to update user count state and add 1 to 'Users Online' counter
   const numOfUsers = {
-    type: "numOfUsers",
+    type: 'numOfUsers',
     numOfUsers: wss.clients.size
   }
   wss.broadcast(numOfUsers)
@@ -40,7 +40,7 @@ wss.on('connection', (ws) => {
 
   //  Assigns each new user a randomly generated color from color array above
   const userColor = {
-    type: "userColor",
+    type: 'userColor',
     userColor: randomColor
   }
   ws.send(JSON.stringify(userColor))
@@ -51,21 +51,21 @@ wss.on('connection', (ws) => {
     const data = JSON.parse(message);
 
     switch (data.type) {
-      case "postMessage":
+      case 'postMessage':
         // handle incoming message
         data.id = uuidv1()
-        data.type = "incomingMessage"
+        data.type = 'incomingMessage'
         break;
-      case "postNotification":
+      case 'postNotification':
         // handle incoming notification
         data.id = uuidv1();
-        data.type = "incomingNotification";
+        data.type = 'incomingNotification';
         data.content = `${data.nameA} has changed their name to ${data.nameB}`
         console.log(JSON.stringify(data.content))
         break;
       default:
         // show an error in the console if the message type is unknown
-        throw new Error("Unknown event type " + message.type);
+        throw new Error('Unknown event type ' + message.type);
     }
 
       wss.broadcast(data)
@@ -74,7 +74,7 @@ wss.on('connection', (ws) => {
   ws.on('close', () => {
       console.log('Client disconnected')
       const numOfUsers = {
-        type: "numOfUsers",
+        type: 'numOfUsers',
         numOfUsers: wss.clients.size
       }
       wss.broadcast(numOfUsers)
