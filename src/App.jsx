@@ -13,7 +13,7 @@ class App extends Component {
       color: "black"
     };
     // this.socket = new WebSocket("ws://localhost:3001");
-    this.socket = new WebSocket("wss:chris-chatty-app.herokuapp.com/");
+    this.socket = new WebSocket("wss://chris-chatty-app.herokuapp.com/");
   }
 
   componentDidMount() {
